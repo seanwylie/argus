@@ -1,0 +1,84 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info
+*.egg-info/
+.installed.cfg
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Argus importer (git clone cache under repo root)
+.import_cache/
+
+# Virtual environments (.venv311 etc. for testing the supported Python matrix)
+.venv*/
+venv/
+ENV/
+env/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Build / tooling
+*.log
+node_modules/
+
+# --- runs/ (local pipeline output; never commit artifacts) ---
+# Ignore everything under runs/ except this README (stable mount + docs).
+# Previously we listed subtrees; new paths (debug/, policy/, products/, worker/, …)
+# were easy to miss. Use a blanket rule + negation.
+runs/*
+!runs/README.md
+
+# --- tmp/ (local scratch: eval transcripts, one-off captures, working notes) ---
+# Never committed. These accumulate host paths and whatever product happened to be
+# under evaluation, so they are not suitable for a published tree.
+tmp/
+
+# Release audit material: private working notes for the open-source pass.
+.release-audit/
+
+.env.argus.sandbox
+
+# Product app working trees: separate git clones (not embedded in the Argus repo).
+# Track products/<id>/product.yaml etc.; clone each app repo into products/<id>/app locally.
+products/*/app/
+# Exception: the example product's site is a committed fixture, not a clone. Builder's
+# expansion heuristic checks for a group hub page, so the site must be present in a fresh
+# clone for the documented output to reproduce.
+!products/example-app/app/

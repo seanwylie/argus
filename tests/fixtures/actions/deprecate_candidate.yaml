@@ -1,0 +1,15 @@
+# Example: deprecate flow with an allowed lifecycle transition (decline -> kill).
+action_id: ex_deprecate_demo_content
+product_id: demo-content
+action_type: deprecate
+working_directory: .
+command: "uv run argus lifecycle show demo-content"
+expected_outcome: "Operator confirms lifecycle context before archival steps."
+rollback_notes: "Revert product.yaml lifecycle edits if deprecation is cancelled."
+requires_approval: true
+safe_to_auto_execute: false
+estimated_duration: "30s"
+created_at: "2026-04-12T12:10:00Z"
+lifecycle_transition:
+  from: decline
+  to: kill

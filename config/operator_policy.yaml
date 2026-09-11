@@ -1,0 +1,11 @@
+# Optional operator policy overrides (merged over frozen defaults in code).
+# Full schema: argus.operator_policy.v1 — see docs/operator-policy.md and
+# `argus policy show-operator` (writes runs/policy/operator_policy_effective.json).
+#
+# Example (commented — defaults match historical behavior; uncomment to tune):
+#
+# schema: argus.operator_policy.v1
+# confidence:
+#   low_threshold: 0.45
+# quiescence:
+#   debt_delta_material: 0.08

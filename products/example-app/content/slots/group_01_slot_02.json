@@ -1,0 +1,21 @@
+{
+  "schema": "argus.content_slot_node.v1",
+  "id": "group_01_slot_02",
+  "status": "outlined",
+  "group_id": "group_01_coast_path",
+  "ordinal_in_group": 2,
+  "working_title": "Tidepool Steps",
+  "summary": "Second Coast Path entry. Outlined only: the structure is recorded but the body has not been written, which is what distinguishes 'outlined' from 'seeded' in this fixture.",
+  "entry": {
+    "location_note": "Placeholder: the cut steps immediately past the beacon.",
+    "surface": "Placeholder: uneven stone, slippery when wet.",
+    "what_to_look_for": [
+      "Placeholder: pool inhabitants visible at low water.",
+      "Placeholder: seasonal weed cover on the lower steps."
+    ],
+    "accessibility": "Placeholder: steps only, no level alternative.",
+    "takeaway": "Placeholder: best visited within an hour of low tide."
+  },
+  "content_fidelity": "outline_only",
+  "notes": "Fictional example content written for the Argus demo. Deliberately left as an outline so the catalog shows more than one fidelity level."
+}

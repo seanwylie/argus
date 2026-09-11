@@ -1,0 +1,8 @@
+schema: argus.project_permission_policy.v1
+observe_prod_signals: "confirm"
+mutate_nonprod: "confirm"
+mutate_prod: "no"
+commit_local: "yes"
+push_remote: "confirm"
+deploy: "no"
+change_experiments: "confirm"

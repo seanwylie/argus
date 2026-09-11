@@ -1,0 +1,42 @@
+actions:
+  analyze: ./scripts/analyze.sh
+  start: ./scripts/start.sh
+  stop: ./scripts/stop.sh
+constraints:
+  max_monthly_cost_usd: 25.0
+  min_activity_threshold: 1.0
+cost:
+  monthly_usd: 5.0
+  notes: Fictional placeholder estimate (static hosting + domain). Not a real bill.
+id: example-app
+lifecycle:
+  next_gate: seed the remaining Coast Path slots and confirm the catalog matches on-disk entries
+  stage: build
+metrics:
+  local_paths:
+  - metrics/
+  primary:
+  - pageviews
+  - entries_published
+name: Example App
+owner:
+  operator: ''
+  team: argus
+signals:
+- enabled: true
+  type: filesystem
+- enabled: true
+  type: metrics
+- enabled: false
+  type: analytics
+- enabled: false
+  type: cost
+- enabled: true
+  type: health
+- enabled: true
+  type: execution
+- enabled: false
+  type: custom
+state: build
+status: experimental
+type: static_site

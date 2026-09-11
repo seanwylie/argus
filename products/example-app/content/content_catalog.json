@@ -1,0 +1,98 @@
+{
+  "schema": "argus.content_catalog.v1",
+  "catalog_generated_at_utc": "2026-01-15T12:00:00Z",
+  "source": {
+    "description": "Hand-written fixture for the Argus example product. Entirely fictional; no real trails, places, or organizations.",
+    "path_hint": "products/example-app/docs/catalog-notes.md"
+  },
+  "collection": {
+    "id": "example-field-guide",
+    "title": "Example Field Guide",
+    "product_label": "Example App",
+    "description": "A small static field guide used to demonstrate the Argus spine end to end. Groups are regions; slots are individual guide entries.",
+    "authoring_rules": [
+      "Each slot is one self-contained guide entry.",
+      "Entries within a group are ordered and read as a sequence.",
+      "A slot advances through planned -> outlined -> seeded as it gains substance."
+    ]
+  },
+  "status_vocabulary": {
+    "planned": "Slot reserved in the catalog; no content drafted.",
+    "outlined": "Structure and intent recorded; body not written.",
+    "seeded": "A usable first version exists on disk."
+  },
+  "groups": [
+    {
+      "id": "group_01_coast_path",
+      "title": "Coast Path",
+      "ordinal": 1,
+      "summary": "Shoreline entries, ordered from the harbour outward.",
+      "slots": [
+        {
+          "id": "group_01_slot_01",
+          "ordinal": 1,
+          "status": "seeded",
+          "working_title": "Harbour Wall"
+        },
+        {
+          "id": "group_01_slot_02",
+          "ordinal": 2,
+          "status": "outlined",
+          "working_title": "Tidepool Steps"
+        },
+        {
+          "id": "group_01_slot_03",
+          "ordinal": 3,
+          "status": "planned",
+          "working_title": "Gull Point"
+        },
+        {
+          "id": "group_01_slot_04",
+          "ordinal": 4,
+          "status": "planned",
+          "working_title": "Shell Beach"
+        }
+      ]
+    },
+    {
+      "id": "group_02_ridge_loop",
+      "title": "Ridge Loop",
+      "ordinal": 2,
+      "summary": "Upland entries forming a loop above the coast path.",
+      "slots": [
+        {
+          "id": "group_02_slot_01",
+          "ordinal": 1,
+          "status": "seeded",
+          "working_title": "Lower Saddle"
+        },
+        {
+          "id": "group_02_slot_02",
+          "ordinal": 2,
+          "status": "planned",
+          "working_title": "Wind Notch"
+        }
+      ]
+    },
+    {
+      "id": "group_03_marsh_boardwalk",
+      "title": "Marsh Boardwalk",
+      "ordinal": 3,
+      "summary": "Wetland entries; the least developed group in this fixture.",
+      "slots": [
+        {
+          "id": "group_03_slot_01",
+          "ordinal": 1,
+          "status": "planned",
+          "working_title": "Reed Crossing"
+        },
+        {
+          "id": "group_03_slot_02",
+          "ordinal": 2,
+          "status": "planned",
+          "working_title": "Heron Blind"
+        }
+      ]
+    }
+  ]
+}

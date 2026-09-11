@@ -1,0 +1,28 @@
+# Example systemd *user* unit for the Argus operator dashboard.
+#
+# Copy to ~/.config/systemd/user/argus-dashboard.service, adjust paths, then:
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now argus-dashboard.service
+#   loginctl enable-linger $USER   # optional: start user services at boot without login
+#
+# The unit assumes `uv` is on PATH for non-interactive user sessions. If not, set
+# Environment=PATH=... or use a wrapper script with an absolute `uv` path.
+
+[Unit]
+Description=Argus operator dashboard (Streamlit)
+After=network-online.target
+
+[Service]
+Type=simple
+# TODO: set to your clone of the Argus repo (must match ARGUS_REPO_ROOT).
+WorkingDirectory=%h/dev/systems/argus
+# Ensure `uv` is found (exit 127 = "command not found" if PATH is too minimal).
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=ARGUS_REPO_ROOT=%h/dev/systems/argus
+Environment=ARGUS_DASHBOARD_PORT=8501
+ExecStart=%h/dev/systems/argus/tools/run_dashboard.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

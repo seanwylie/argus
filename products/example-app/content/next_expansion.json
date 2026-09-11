@@ -1,0 +1,34 @@
+{
+  "as_of_utc": "2026-09-11T20:27:44Z",
+  "disclaimer": "Heuristic priority from the content catalog + simple group/spine rules; not a commitment, backlog, or demand signal.",
+  "explicit_non_targets": [
+    {
+      "id": "group_02_hub",
+      "reason": "Group 2 is not yet as embodied as group 1 for this heuristic; breadth (a new group hub) is secondary to finishing the strongest in-order spine."
+    }
+  ],
+  "generator": {
+    "group_selection": "max_embodied_then_hub_then_lower_ordinal",
+    "id": "argus.content_catalog.next_expansion_heuristic.v1",
+    "slot_selection": "first_planned_after_contiguous_embodied_prefix_from_slot_1"
+  },
+  "primary_target": {
+    "basis": [
+      "Source: content_catalog.json (schema argus.content_catalog.v1)",
+      "Chosen group: group_01_coast_path (ordinal 1)",
+      "Embodied slots in chosen group: 2",
+      "Contiguous embodied prefix from slot 1: 2 slot(s)",
+      "Next planned slot: group_01_slot_03 (ordinal 3)",
+      "Generator: argus.content_catalog.next_expansion_heuristic.v1"
+    ],
+    "confidence": "high",
+    "group_id": "group_01_coast_path",
+    "group_ordinal": 1,
+    "id": "group_01_slot_03",
+    "ordinal_in_group": 3,
+    "rationale": "Heuristic: group 1 (Coast Path) currently has the strongest embodied spine in the catalog (2 embodied slot(s); hub page present). The contiguous chain from slot 1 has 2 embodied slot(s); the next in-order planned slot is group_01_slot_03.",
+    "status_in_catalog": "planned",
+    "target_type": "content_slot"
+  },
+  "schema": "argus.next_expansion.v1"
+}

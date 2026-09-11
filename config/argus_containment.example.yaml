@@ -1,0 +1,21 @@
+# Copy to config/argus_containment.yaml and adjust. Schema: argus.credential_containment_policy.v0
+#
+# When `enforce: true` OR export ARGUS_CREDENTIAL_CONTAINMENT=1, Argus subprocesses used by
+# `argus execution run` and approved `argus actions execute` strip ambient credential env vars
+# (AWS_*, common CI tokens, SSH_AUTH_SOCK) unless overridden below.
+
+schema: argus.credential_containment_policy.v0
+enforce: false
+
+# Optional overrides (defaults strip AWS_, AZURE_, GCP_, ALICLOUD_ prefixes and token env vars).
+# strip_env_prefixes:
+#   - AWS_
+# strip_env_exact:
+#   - GITHUB_TOKEN
+
+# Document human-approved grants for capability map (v0 does not auto-load secrets from disk).
+grants:
+  git_push: false
+  aws_read_staging: false
+  aws_write_staging: false
+  deploy: false

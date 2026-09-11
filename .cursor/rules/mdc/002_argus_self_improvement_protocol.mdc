@@ -1,0 +1,63 @@
+---
+description: How MDC rules may change—proposal format, classifications, no silent edits
+alwaysApply: false
+---
+
+# 002 — Self-improvement protocol
+
+**Schema:** `argus.mdc.v1` · **Layer:** PRECURSOR
+
+## Invariant
+
+**No silent modification of MDC rules.** Any change to `.cursor/rules/mdc/*.mdc` MUST be a tracked git change with a proposal record (see §FORMAT).
+
+## Improvement proposal format (required fields)
+
+```yaml
+mdc_proposal:
+  id: PROP-YYYYMMDD-NNN          # unique
+  target_file: .cursor/rules/mdc/NNN_name.mdc
+  classification: CLARIFICATION | CONSTRAINT_TIGHTENING | CONSTRAINT_LOOSENING | NEW_RULE
+  rule_reference: "<section or rule id>"   # or NEW for NEW_RULE
+  change_summary: "one sentence"
+  reason: "why now"
+  observed_failure_evidence: "test name, incident, repeated agent error—concrete"
+  expected_improvement: "measurable or observable"
+  risk_of_change: LOW | MEDIUM | HIGH
+  rollback: "how to revert"
+```
+
+## Classification rules
+
+| Class | Use when | Review bar |
+|-------|----------|------------|
+| **CLARIFICATION** | Wording only; no new obligation | Low |
+| **CONSTRAINT_TIGHTENING** | New MUST / new DISALLOW | Medium+ |
+| **CONSTRAINT_LOOSENING** | Remove or weaken obligation | High—requires failure evidence |
+| **NEW_RULE** | New section with new obligations | High—must not contradict 000/003 |
+
+## Safety rules
+
+1. **CONSTRAINT_LOOSENING** MUST cite sustained friction (e.g. 3+ instances in 004 log) unless human approves exception.
+2. **HIGH** risk proposals MUST NOT merge in same session as behavioral changes to production code—separate commit.
+3. Proposals affecting **alwaysApply: true** files (000, 001) require explicit human ACK in commit message: `MDC-ACK: <proposal id>`.
+
+## Drift handling
+
+- **004** defines signals. When the same failure class appears **≥3** times in rolling window, open **one** tightening proposal OR one clarification—never both unlabeled.
+
+## Disallowed
+
+- Editing MDC without `mdc_proposal` block in commit body or companion `docs/mdc/proposals/PROP-*.md`.
+- Contradicting a higher-precedence file without updating **003**.
+
+## Failure conditions
+
+- Undocumented edit to `mdc/*.mdc`.
+- NEW_RULE that duplicates 000 without precedence resolution in 003.
+
+## Cross-references
+
+- **003** — Precedence
+- **004** — Drift detection
+- **docs/mdc/proposals/** — evolution proposals (if present)

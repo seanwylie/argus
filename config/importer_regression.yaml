@@ -1,0 +1,44 @@
+# Argus importer — regression / repeat-run input (no secrets here).
+#
+# Purpose: one file operators can copy or extend to drive repeatable imports from GitHub.
+# Replace placeholder URLs with real `https://github.com/owner/repo` values in your environment.
+#
+# How to run (example — adjust flags per repo):
+#   uv run python tools/import_product.py --repo-url <url> --product-id <id> [flags...]
+#   uv run python tools/import_product.py status --product-id <id>
+#   uv run python tools/import_product.py --product-id <id> --status [--json]
+#
+# Schema version bumps when fields are added or renamed.
+#
+# Optional per-repo falsifiable checks (used by `tools/run_importer_regression.py`):
+#   expect:
+#     paths_all: [README.md, pyproject.toml]   # all must exist under products/<product_id>/ after sync
+#
+# Measurement runner (does not change importer code):
+#   uv run python tools/run_importer_regression.py
+# Report: runs/importer_regression/<timestamp>.md
+
+version: 2
+
+# Defaults merged into each repo entry unless overridden.
+defaults:
+  operator_team: argus
+  operator_name: ""
+  product_type: application
+  # Typical flags (mirror CLI; omit key to use importer defaults).
+  include_cursor: false
+  include_local_db_artifacts: false
+  # When true, node_modules/.next/… are excluded during sync (matches CLI default).
+  exclude_node_artifacts: true
+  extra_excludes: []
+  skip_first_pass: false
+  no_uv: false
+
+# Ordered list of regression targets. `product_id` must match `products/<product_id>/`.
+repos:
+  - id: example-app
+    github_url: "https://github.com/OWNER/REPO_PLACEHOLDER"
+    product_id: example-app
+    notes: "Fictional fixture shipped with the repo. Replace the URL before using this file as a real import list."
+    flags:
+      product_type: application

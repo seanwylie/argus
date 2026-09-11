@@ -1,0 +1,3 @@
+{"event": "catalog_index_opened", "occurred_at_utc": "2026-01-16T09:00:00Z", "surface": "content/content_catalog.json", "detail": "Operator checked catalog slot ids against content/slots/ during a local validation pass."}
+{"event": "groups_index_verified", "occurred_at_utc": "2026-01-16T09:02:00Z", "surface": "app/site/groups.html", "detail": "Operator confirmed group sections and entry links resolve to files on disk."}
+{"event": "slot_page_reviewed", "occurred_at_utc": "2026-01-16T09:04:00Z", "surface": "app/site/slot/group_01_slot_01.html", "detail": "Operator read the seeded entry end to end and confirmed it matches its catalog status."}

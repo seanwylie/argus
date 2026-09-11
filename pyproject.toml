@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "argus"
+version = "0.1.0"
+description = "Argus: observe and evaluate products — unified CLI for signals, findings, decisions, and portfolio refresh."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [
+    { name = "Sean Wylie" },
+]
+keywords = [
+    "portfolio-management",
+    "agent-orchestration",
+    "auditability",
+    "human-in-the-loop",
+    "local-first",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/seanwylie/argus"
+Repository = "https://github.com/seanwylie/argus"
+Documentation = "https://github.com/seanwylie/argus/blob/main/docs/argus-reference.md"
+Issues = "https://github.com/seanwylie/argus/issues"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "ruff>=0.8",
+]
+dashboard = [
+    "streamlit>=1.40",
+]
+
+[project.scripts]
+argus = "argus.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["argus*"]
+
+[tool.setuptools.package-data]
+argus = ["llm/prompts/*.txt"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# Lint/format only Argus core and tests (not products/, scripts/, etc.)
+include = ["argus/**/*.py", "argus/**/*.pyi", "tests/**/*.py", "tests/**/*.pyi"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.coverage.run]
+source = ["argus"]
+omit = ["tests/*"]
+
+# Root ``pytest`` should exercise Argus only; product trees under ``products/*/`` may ship
+# their own tests/deps and must not break ``uv run pytest`` from the repo root.
+[tool.pytest.ini_options]
+testpaths = ["tests"]

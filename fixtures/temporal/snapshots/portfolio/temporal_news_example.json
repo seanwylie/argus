@@ -1,0 +1,11 @@
+{
+  "schema": "argus.temporal.news_snapshot.v1",
+  "scope": "portfolio",
+  "source_timestamp": "2026-04-11T09:00:00Z",
+  "headline_spike_score": 0.78,
+  "topic": "regulatory",
+  "headlines": [
+    "Sector headlines increased vs prior week",
+    "Analyst notes cite macro headwinds"
+  ]
+}

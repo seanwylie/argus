@@ -1,0 +1,23 @@
+# gitleaks configuration
+#
+# Run the same scan this project runs before a release:
+#
+#   gitleaks detect --no-git --redact
+#
+# `--redact` matters: without it, a matched value is written into the report, which turns a
+# scan artifact into a place secrets can live.
+
+[extend]
+useDefault = true
+
+# Two import statements match the built-in `generic-api-key` rule because they name internal
+# permission-key symbols (`infer_phase1_key`, `Phase1PermissionKey`). They contain no
+# credential material. Scoped to these two paths rather than disabling the rule, so a real
+# finding elsewhere in the tree still fails the scan.
+[[rules]]
+id = "generic-api-key"
+[rules.allowlist]
+paths = [
+  '''argus/execution/engine\.py''',
+  '''argus/project_permissions/gate\.py''',
+]

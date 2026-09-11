@@ -1,0 +1,34 @@
+# Example systemd *user* unit for the Argus portfolio autonomous runner (cadence).
+#
+# Copy to ~/.config/systemd/user/argus-portfolio-runner.service, adjust paths, then:
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now argus-portfolio-runner.service
+#   loginctl enable-linger $USER   # optional: start user services at boot without login
+#
+# Same `uv` discovery as `argus-dashboard.service.example`: PATH includes ~/.local/bin,
+# and tools/run_portfolio_runner.sh prepends ~/.local/bin when `uv` is missing.
+# Override with Environment=UV=/full/path/to/uv if needed.
+
+[Unit]
+Description=Argus portfolio autonomous runner (cadence)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# TODO: set to your clone of the Argus repo (must match ARGUS_REPO_ROOT).
+WorkingDirectory=%h/dev/systems/argus
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=ARGUS_REPO_ROOT=%h/dev/systems/argus
+ExecStart=%h/dev/systems/argus/tools/run_portfolio_runner.sh \
+  --interval-seconds 3600 \
+  --max-runs 100000 \
+  --max-cycles-per-run 3 \
+  --limit-per-cycle 3
+# Exit 143 = 128+SIGTERM: normal when `systemctl stop` / restart; without this, systemd logs "Failed".
+SuccessExitStatus=0 143
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target

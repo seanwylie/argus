@@ -1,0 +1,36 @@
+---
+description: Extension—first session in repo; what to load before coding
+alwaysApply: false
+---
+
+# 060 — Repo onboarding (extension)
+
+**Schema:** `argus.mdc.v1` · **Layer:** EXTENSION
+
+## Mandatory reads (first implementation task in session)
+
+IF task touches Argus behavior THEN MUST read:
+
+1. `docs/argus-context/north-star.md` OR `docs/argus-context/08-operating-principles.md` (at least one)
+2. `docs/README.md` CLI section IF changing CLI
+
+IF the task path is under **`products/<id>/`** THEN MUST also:
+
+1. Check for **`products/<id>/.cursor/rules/*.mdc`** and apply rules whose scope matches the task (or state **UNKNOWN** for product conventions not loaded).
+2. Prefer product **README** / **Makefile** / documented env for verification over generic monorepo defaults (**010** nested-product section).
+
+## Allowed shortcuts
+
+- If **only** fixing typo in `tests/`, reading full north-star OPTIONAL but **010** verification still required.
+
+## Disallowed
+
+- First edit without any doc touchpoint when changing operator-visible behavior.
+
+## Failure conditions
+
+- Implementing portfolio commands without checking `docs/README.md` for surface area.
+
+## Cross-references
+
+- `.cursor/rules/argus-context-first.mdc` (legacy single-file ramp-up)

@@ -1,0 +1,23 @@
+# Minimal valid product for tests — copied into a temp repo root; not live inventory.
+id: fixture_action_product
+name: Fixture action product
+owner:
+  team: test
+lifecycle:
+  stage: grow
+metrics:
+  local_paths: [metrics/]
+  primary: []
+cost:
+  monthly_usd: 1
+  notes: ""
+signals:
+  - type: filesystem
+    enabled: true
+actions:
+  start: "./scripts/s.sh"
+  stop: "./scripts/s.sh"
+  analyze: "./scripts/analyze.sh"
+constraints:
+  max_monthly_cost_usd: 10
+  min_activity_threshold: 0

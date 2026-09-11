@@ -1,0 +1,21 @@
+{
+  "schema": "argus.content_slot_node.v1",
+  "id": "group_02_slot_01",
+  "status": "seeded",
+  "group_id": "group_02_ridge_loop",
+  "ordinal_in_group": 1,
+  "working_title": "Lower Saddle",
+  "summary": "Opening entry for the Ridge Loop. Seeded, but the group has fewer embodied slots than the Coast Path, which is why the expansion heuristic does not choose it.",
+  "entry": {
+    "location_note": "Leaves the coast path at the second stile and climbs to the saddle.",
+    "surface": "Grass track, rutted in places.",
+    "what_to_look_for": [
+      "The bay comes into view all at once at the top of the rise.",
+      "Drystone field boundaries that predate the current path."
+    ],
+    "accessibility": "Sustained climb with one stile; no wheeled access.",
+    "takeaway": "Shortest route to a view of the whole bay, at the cost of the only real ascent in the guide."
+  },
+  "content_fidelity": "seeded",
+  "notes": "Fictional example content written for the Argus demo."
+}

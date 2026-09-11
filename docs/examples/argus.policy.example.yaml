@@ -1,0 +1,15 @@
+# Example Phase 1 project policy — copy to products/<product_id>/argus.policy.yaml
+#
+# Rules:
+# - All Phase 1 keys (see docs/project-permissions-phase1.md).
+# - Each value MUST be a quoted string: "yes" | "no" | "confirm"
+# - Never use unquoted yes/no (YAML treats them as booleans; Argus will reject the file).
+schema: argus.project_permission_policy.v1
+observe_prod_signals: "confirm"
+mutate_nonprod: "confirm"
+mutate_prod: "no"
+commit_local: "yes"
+push_remote: "confirm"
+deploy: "no"
+change_experiments: "confirm"
+builder_execute: "yes"

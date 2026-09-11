@@ -1,0 +1,142 @@
+---
+description: Confidence labeling and mandatory escalation/stop conditions
+alwaysApply: false
+---
+
+# 030 — Confidence and escalation
+
+**Schema:** `argus.mdc.v1` · **Layer:** CORE
+
+## Confidence labels (use in output when non-obvious)
+
+| Label | Meaning |
+|-------|---------|
+| **VERIFIED** | Ran command / read file in this session |
+| **INFERRED** | Deduced from code structure; cite path |
+| **UNKNOWN** | Not checked; do not present as fact |
+
+## Confidence ceiling (aggregate claims)
+
+**Invariant:** **Confidence MUST NOT exceed the weakest critical verification dimension.**
+
+Treat verification as **dimensions** (non-exhaustive; pick those that apply to the change):
+
+| Dimension | Examples |
+|-----------|----------|
+| **Logic** | Unit tests, pure functions, local `pytest` for changed module |
+| **Integration** | Multi-module / CLI / DB / filesystem paths exercised |
+| **System / E2E** | Full flow, staging-like run, or documented manual check |
+| **Operational** | Deploy, config, secrets handling—each needs explicit pass or **UNKNOWN** |
+
+**Rule:**
+
+1. List each dimension as **VERIFIED**, **NOT_RUN**, or **UNKNOWN** for this change.
+2. **Overall confidence** for shipping or recommending merge MUST be **≤** the level allowed by the **worst** dimension:
+   - Any critical dimension **NOT_RUN** or **UNKNOWN** → overall confidence **at most MEDIUM** (never HIGH or “fully verified”).
+   - Two or more critical dimensions **NOT_RUN**/**UNKNOWN** → overall **LOW** or **BLOCKED** until named.
+
+**Example (forbidden pattern):**
+
+- Logic: **VERIFIED** (unit tests green)
+- Integration: **NOT_RUN** (no CLI / no cross-module check)
+- → **Overall confidence ≤ MEDIUM** — do **not** state “high confidence” or “fully verified” from unit tests alone.
+
+This blocks **one green checkmark → high confidence** syndrome.
+
+## Impact classification (REQUIRED)
+
+**When:** Before any terminal outcome label (see **Terminal outcome labels**). Again if change intent or touched paths shift materially mid-task. If the workflow uses numbered passes, classification MUST occur at the **scope-validation** pass and again at **final acceptance** (e.g. PASS 2 and PASS 7 where those names exist).
+
+**Lanes (pick at least one; flat list):**
+
+| Lane | Covers |
+|------|--------|
+| **STRUCTURAL** | Code correctness, wiring, types, build integrity |
+| **BEHAVIORAL** | User-visible or API-observable behavior change |
+| **ECONOMIC** | Revenue, retention, cost, growth—only if tied to stated product/org goal or metric in repo/docs |
+| **TRUST** | Security, safety, correctness guarantees, data handling |
+| **OPERATOR** | Developer efficiency, observability, debuggability, local ergonomics |
+
+**Rules:**
+
+1. **At least one** lane MUST be selected and named in the outcome block.
+2. Selection MUST cite **repo evidence** (path, test, CLI, doc) **or** one-sentence **change intent** that ties the lane to the diff—no orphan labels.
+3. If **no** lane truthfully applies to the substance of the change → terminal outcome **MUST NOT** exceed **PARTIAL_SUCCESS**.
+4. **Cosmetic-only** (formatting, whitespace, comment-only edits with no semantic change): MUST state **COSMETIC-ONLY** in the impact line; terminal outcome **MUST NOT** be **ACCEPTED** (cap at **PARTIAL_SUCCESS** or **ACCEPTED_WITH_CAVEATS**).
+
+This blocks **verification satisfied but economically or practically hollow** claims without forcing scoring—only explicit linkage.
+
+## Terminal outcome labels
+
+| Label | Use when |
+|-------|----------|
+| **ACCEPTED** | Full intent met; impact lanes justified; confidence honest; **not** available for **LOW_CONFIDENCE_PROCEED** or **COSMETIC-ONLY** caps. |
+| **ACCEPTED_WITH_CAVEATS** | Shipped with listed assumptions/unknowns; **LOW_CONFIDENCE_PROCEED** allowed path. |
+| **PARTIAL_SUCCESS** | Incomplete, hollow lane fit, or cosmetic-only cap; **LOW_CONFIDENCE_PROCEED** allowed path. |
+| **REJECTED** / **BLOCKED** | STOP, failed verification, or refuse per **000** / **003**. |
+
+## Execution lanes (when not STOP / ESCALATE)
+
+**STOP** and **ESCALATE** lists below are unchanged and take precedence.
+
+When implementation is not blocked by those lists, choose:
+
+1. **PROCEED** — Verification and impact linkage support the claim; overall confidence aligns with **Confidence ceiling**; terminal label may be **ACCEPTED** when all obligations are met.
+2. **LOW_CONFIDENCE_PROCEED** — Bounded progress under uncertainty; **never** produces **ACCEPTED** (see **LOW_CONFIDENCE_PROCEED**).
+
+**LOW_CONFIDENCE_PROCEED** — allowed **ONLY IF ALL** of the following hold:
+
+| # | Condition |
+|---|-----------|
+| L1 | **Local scope:** one subsystem, or one tightly bounded call path—no cross-cutting refactor. |
+| L2 | **Reversible:** revert is low effort (small diff, no migrations, no data shape change)—state why. |
+| L3 | **Safe:** no violation of **000**, **001**, or **Mandatory STOP** / **Mandatory ESCALATE** rules for this action. |
+| L4 | **Assumptions explicit:** bulleted list in the outcome block. |
+| L5 | **Verification partial but real:** at least one verification dimension **VERIFIED** for the intended improvement (not zero checks). |
+| L6 | **No better path:** no equally cheap high-confidence alternative was skipped (e.g. running the documented test command first). |
+
+**Required behavior for LOW_CONFIDENCE_PROCEED:**
+
+- Terminal label **MUST** be **ACCEPTED_WITH_CAVEATS** or **PARTIAL_SUCCESS**—**NOT** **ACCEPTED**.
+- **MUST** list **assumptions** and **UNKNOWN** items explicitly.
+- **Overall confidence** **MUST** be capped at **LOW** or **MEDIUM** (never HIGH).
+- **MUST NOT** label **ACCEPTED** for this run.
+
+If **any** L1–L6 fails → use **Mandatory ESCALATE**, **STOP**, or normal **PROCEED** after satisfying conditions—**do not** use **LOW_CONFIDENCE_PROCEED** as a bypass.
+
+## Mandatory STOP (no implementation)
+
+1. **Security:** secrets, credentials, production DB URLs in plaintext.
+2. **Ambiguous blast radius:** change affects auth, billing, or PII handling without spec.
+3. **Contradictory requirements** between user messages unresolved.
+
+## Mandatory ESCALATE (may propose; do not implement core fix)
+
+1. **Architecture change** spanning >2 top-level packages without ADR or user sign-off.
+2. **MDC / policy** change requiring **002** but missing proposal block.
+3. **Repeated test failures** after 2 fix attempts—report diff, stop scope expansion.
+
+## Disallowed
+
+- Hiding **UNKNOWN** behind confident tone.
+- Escalating routine lint issues as "architecture" to avoid work.
+- Declaring **HIGH** overall confidence when any listed critical dimension is **NOT_RUN** or **UNKNOWN**.
+- Using **LOW_CONFIDENCE_PROCEED** to avoid **Mandatory ESCALATE** when L1–L6 are not all satisfied.
+- Marking a **LOW_CONFIDENCE_PROCEED** outcome as **ACCEPTED**.
+
+## Failure conditions
+
+- Shipping with **UNKNOWN** labeled as **VERIFIED**.
+- Claiming “production-ready” / “high confidence” / “fully tested” when integration or system verification was not performed and was required for the change class.
+- Bypassing STOP for "small" secrets convenience.
+- Using **LOW_CONFIDENCE_PROCEED** when **Mandatory ESCALATE** or **STOP** applied.
+- Marking low-confidence or caveat-heavy work as **ACCEPTED**.
+- Omitting **assumptions** (or **UNKNOWN**) in a **LOW_CONFIDENCE_PROCEED** outcome.
+- Claiming **ECONOMIC** or **BEHAVIORAL** lane without evidence or intent sentence tied to the actual change.
+- Selecting an **impact** lane with no connection to the diff or stated intent.
+- **ACCEPTED** for **COSMETIC-ONLY** or **LOW_CONFIDENCE_PROCEED** paths.
+
+## Cross-references
+
+- **000**, **003**
+- **004** — Drift signals for false verification

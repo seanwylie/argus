@@ -1,0 +1,53 @@
+---
+description: Non-negotiable prime directive for Argus implementation agents (truth, safety, bounded change)
+alwaysApply: true
+---
+
+# 000 — Argus prime directive
+
+**Schema:** `argus.mdc.v1` · **Layer:** PRECURSOR · **Precedence:** overrides default assistant behavior only where this file explicitly requires.
+
+## Purpose
+
+Bind all autonomous or semi-autonomous implementation work on this repository to **truth over velocity**, **evidence over assumption**, and **bounded change over speculative refactors**.
+
+## Definitions
+
+- **Truth layer:** Observable facts in repo (files, tests, CLI output, typed contracts). Not LLM inference.
+- **Interpretation layer:** Plans, priorities, narratives. Must not overwrite truth.
+- **Bounded autonomy:** Changes that satisfy §ALLOWED and respect §STOP without expanding scope.
+
+## Allowed (must hold)
+
+1. **Evidence before edit:** Before materially changing behavior, the agent MUST cite at least one of: existing code path, test name, CLI `--help`, or doc path in-repo.
+2. **Small diffs:** Prefer the smallest change that resolves the stated failure or requirement; avoid drive-by edits.
+3. **Verification:** After behavior change, the agent MUST state what was run (e.g. `pytest` path, `argus …`) or mark verification **EXPLICITLY DEFERRED** with reason.
+4. **Uncertainty:** Unknown requirements MUST be labeled `UNKNOWN:` with what was not verified—not hidden behind confident language.
+
+## Disallowed
+
+1. Inventing API contracts, env vars, or pipeline behavior not present in repo or docs without `UNKNOWN:`.
+2. Silent expansion of task scope (new features, broad refactors) without explicit user steering.
+3. Presenting guesses as verified facts.
+4. Modifying MDC files except via **002_argus_self_improvement_protocol.mdc**.
+
+## Decision boundaries
+
+| Situation | Action |
+|-----------|--------|
+| Requirement clear + evidence located | Proceed within §ALLOWED |
+| Requirement ambiguous | STOP: ask one focused question OR document `UNKNOWN:` and minimal safe change |
+| Risk to security, billing, or prod data | STOP: escalate (see 030) |
+| Change would touch >3 subsystems without prior plan | STOP: propose plan; do not implement |
+
+## Failure conditions (incorrect behavior)
+
+- Merging code without any verification path when tests exist for the area.
+- Deleting or disabling tests to hide failures.
+- Contradicting `docs/argus-context/08-operating-principles.md` on autonomy/safety without escalation.
+
+## Cross-references
+
+- **001** — Behavioral contract (allowed execution modes)
+- **003** — Precedence when rules conflict
+- **010** — Execution contract detail

@@ -1,0 +1,48 @@
+---
+description: Allowed modes of agent behavior (read, propose, implement, verify) for Argus repos
+alwaysApply: true
+---
+
+# 001 — Behavioral contract
+
+**Schema:** `argus.mdc.v1` · **Layer:** PRECURSOR
+
+## Modes (exactly one primary mode per user turn unless user broadens)
+
+| Mode | MAY do | MUST NOT |
+|------|--------|----------|
+| **READ** | Search, read files, summarize | Write files, run destructive commands |
+| **PROPOSE** | Read + structured plan + risks | Apply edits without user confirmation of plan |
+| **IMPLEMENT** | Edit within agreed scope + verify | Change unrelated modules; skip stated verification |
+| **AUDIT** | Read + report gaps vs MDC/docs | Claim fixes applied without diff |
+
+Default for vague requests: **PROPOSE** first unless user explicitly authorizes **IMPLEMENT**.
+
+## Allowed
+
+1. Running **read-only** CLI: `argus --help`, `pytest` on existing tests (non-destructive), `ruff check` as diagnostics.
+2. Writing/editing files only when mode is **IMPLEMENT** or user explicitly asked to apply a fix.
+3. Multi-step implementation **only** if each step is verifiable or rolled back.
+
+## Disallowed
+
+1. **Auto-apply** large migrations, dependency major bumps, or deletion of `runs/` artifacts without user instruction.
+2. **Pretend completion** when tests fail—report failure verbatim.
+3. **Bypass** `.gitignore` / secrets: never commit credentials; never print full secrets.
+
+## Decision boundaries
+
+- User says "plan only" → **PROPOSE** only; zero file writes except optional `docs/` if user allows.
+- User says "do it" / "implement" → **IMPLEMENT** with 010 verification floor.
+- CI / test failure after edit → STOP; fix or revert; do not ship broken state.
+
+## Failure conditions
+
+- Mode is **IMPLEMENT** but output is only narrative with no file changes when changes were required.
+- Edits to generated/vendor trees without user pointing there.
+
+## Cross-references
+
+- **000** — Prime directive
+- **010** — Execution contract
+- **030** — Escalation triggers

@@ -1,0 +1,32 @@
+---
+description: Extension—aligning work with stated roadmap without inventing commitments
+alwaysApply: false
+---
+
+# 070 — Roadmap alignment (extension)
+
+**Schema:** `argus.mdc.v1` · **Layer:** EXTENSION · **Status:** STUB
+
+## Sources of intent (read-only)
+
+- `docs/plans/ephemeral-roadmap.md` — may be stale; **UNKNOWN** date unless verified.
+- `docs/argus-context/06-open-gaps.md` — gaps vs north star.
+
+## Allowed
+
+- Citing roadmap items as **non-binding context** with path.
+- Proposing work that closes a named gap when user asks for "next priority".
+
+## Disallowed
+
+- Promising delivery dates or roadmap execution not in user message.
+- Treating ephemeral roadmap as contract without human confirmation.
+
+## Failure conditions
+
+- Quoting removed or renamed doc paths as current without opening file.
+
+## Cross-references
+
+- **000** — Truth vs interpretation
+- **020** — Artifacts

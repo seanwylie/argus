@@ -1,0 +1,16 @@
+---
+description: Read Argus project context docs before exploring the codebase
+alwaysApply: true
+---
+
+# Argus — ramp up
+
+Before deep codebase search or large refactors, **load project state** from:
+
+1. **`docs/argus-context/north-star.md`** — vision, closed loop, end state, identity, grounding, burn-down table.
+2. **`docs/architecture/state-of-the-system.md`** — code-grounded architectural review: seven-layer model, subsystem reality, portfolio operator spine, policy control plane, complexity analysis, risks, recommendations.
+3. **`docs/argus-context/08-operating-principles.md`** — short non-negotiables: temporal vs interpretation, confidence/risk, most restrictive autonomy, warn on degraded paths, stub relevance only, external gates.
+
+Then use **`docs/README.md`** for CLI surface, doc index, and depth links.
+
+**Do not** assume Git-tracked `runs/` content exists in-repo; artifacts are usually local/gitignored. Prefer CLI and docs over guessing pipeline behavior.

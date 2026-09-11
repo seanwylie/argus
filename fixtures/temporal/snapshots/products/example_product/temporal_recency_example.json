@@ -1,0 +1,8 @@
+{
+  "schema": "argus.temporal.recency_snapshot.v1",
+  "source_timestamp": "2026-04-12T08:00:00Z",
+  "last_activity_at": "2026-03-28T12:00:00Z",
+  "days_since_activity": 15,
+  "decay_score": 0.55,
+  "last_artifact": "runs/signals/latest/example_product.json"
+}

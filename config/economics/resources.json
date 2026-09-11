@@ -1,0 +1,16 @@
+{
+  "resources": [
+    {
+      "id": "example-api-service",
+      "kind": "ecs_service",
+      "name": "Example API (replace with your billable rows)",
+      "monthly_cost_usd": 0,
+      "product_id": "sample-service",
+      "tags": ["example", "compute"],
+      "labels": {
+        "product_id": "sample-service",
+        "note": "Template row — set monthly_cost_usd and id from your cloud export or vendor SKU."
+      }
+    }
+  ]
+}

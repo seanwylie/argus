@@ -1,0 +1,10 @@
+{
+  "schema": "argus.temporal.market_snapshot.v1",
+  "scope": "global",
+  "source_timestamp": "2026-04-10T14:30:00Z",
+  "fetched_at": "2026-04-10T14:35:00Z",
+  "symbol": "BENCH",
+  "change_pct": -1.25,
+  "benchmark_change_pct": -0.8,
+  "volume_spike": false
+}

@@ -1,0 +1,55 @@
+---
+description: Concrete execution rules—commands, edits, verification floor for Argus implementation
+alwaysApply: false
+---
+
+# 010 — Execution contract
+
+**Schema:** `argus.mdc.v1` · **Layer:** CORE
+
+## Scope
+
+Applies when **IMPLEMENT** mode (001) is active for this repository.
+
+## Preconditions (must all be true before first edit)
+
+1. **Workspace root** identified (Argus monorepo root containing `pyproject.toml`, `argus/`).
+2. **Task boundary** stated in one sentence; if missing, STOP and ask or default to smallest interpretation per 000.
+
+## Allowed commands (non-exhaustive)
+
+- `uv run pytest …` for tests touching changed code
+- `uv run ruff check …` on touched paths
+- `uv run argus …` for CLI surfaces being changed
+
+## Verification floor
+
+| Change type | MUST |
+|-------------|------|
+| Python logic / tests | Run relevant `pytest` or state **BLOCKED:** reason (e.g. env) |
+| CLI parser | Run `argus <cmd> --help` or minimal invocation |
+| Docs only | No pytest; state **N/A** |
+
+## Nested product trees (`products/<id>/`)
+
+When the task is **confined** to a path under `products/<id>/` (not `argus/` or repo-root `tests/`):
+
+1. **Discover** how that product runs tests: `README.md`, `Makefile`, `product.yaml`, or `products/<id>/.cursor/rules/*.mdc` before assuming repo-root commands.
+2. **Prefer** documented product commands (`make test`, `uv run` from that subtree, activation of `products/<id>/app/.venv`, etc.) over blind `uv run pytest` from the monorepo root when they differ.
+3. If the documented path cannot be run in-session (e.g. system `python3` has no `pytest`, venv not activated, missing deps), state **BLOCKED:** with reason; do not claim **VERIFIED** for that dimension (**030**).
+
+## Disallowed
+
+1. `git push --force` to shared default branch without user request.
+2. `rm -rf` on `products/` or `argus/` without explicit user instruction.
+3. Skipping verification when **pytest** exists for the module and environment is capable.
+
+## Failure conditions
+
+- Claiming "tests pass" without having run them when capable.
+- Introducing new dependency in `pyproject.toml` without user request (see anti-failure in user rules—escalate).
+
+## Cross-references
+
+- **020** — Artifact expectations under `runs/`
+- **030** — When to stop

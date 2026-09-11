@@ -1,0 +1,22 @@
+{
+  "schema": "argus.content_slot_node.v1",
+  "id": "group_01_slot_01",
+  "status": "seeded",
+  "group_id": "group_01_coast_path",
+  "ordinal_in_group": 1,
+  "working_title": "Harbour Wall",
+  "summary": "The first entry on the Coast Path: a short stretch of stone wall at the harbour mouth, used here as a worked example of a seeded slot.",
+  "entry": {
+    "location_note": "Begins at the harbour car park and follows the wall east for roughly 400 metres.",
+    "surface": "Flat paving, no steps.",
+    "what_to_look_for": [
+      "Barnacle bands on the lower stonework, which mark the usual tide range.",
+      "Iron mooring rings set into the wall at irregular intervals.",
+      "Wind-shaped scrub on the landward side."
+    ],
+    "accessibility": "Level throughout; suitable for wheeled access as far as the beacon.",
+    "takeaway": "A good orientation stop before the rest of the group, since the whole bay is visible from the end of the wall."
+  },
+  "content_fidelity": "seeded",
+  "notes": "Fictional example content written for the Argus demo. Any resemblance to a real location is coincidental."
+}

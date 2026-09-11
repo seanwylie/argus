@@ -1,0 +1,76 @@
+---
+description: Detecting behavioral drift and feeding structured signals into self-improvement
+alwaysApply: false
+---
+
+# 004 — Drift detection
+
+**Schema:** `argus.mdc.v1` · **Layer:** PRECURSOR
+
+## Definitions
+
+- **Drift:** Repeated gap between **intended** MDC behavior and **observed** agent/repo outcomes.
+- **Signal:** A single **normalized** record (template below)—not a free-form paragraph for threshold math.
+- **Meaningful repeat:** Same **implicated_rule_or_file**, same **decision_boundary** (when used), or same **symptom + execution_phase** pair—**not** the same wording alone.
+
+## Normalized signal record (append-only log)
+
+**Optional path:** `docs/mdc/drift_log.yaml` (git-tracked) or issue tracker; if absent, humans file proposals in **002** format directly.
+
+Each record MUST use this **fixed field set** (empty string only where truly N/A):
+
+```yaml
+- id: SIG-YYYYMMDD-NNN
+  observed_at: ISO8601
+  observed_symptom: "what went wrong in observable terms"
+  implicated_rule_or_file: "e.g. 030_confidence_and_escalation.mdc or 000_argus_prime_directive.mdc"
+  decision_boundary: "optional: section heading or numbered STOP/ESCALATE item; use NONE if not applicable"
+  execution_phase: "e.g. verify, implement, summarize, review"
+  trigger_type: TEST_GAP | SCOPE_CREEP | FALSE_VERIFIED | DOC_LIE | SAFETY_NEAR_MISS | PRECEDENCE_CONFUSION | OTHER
+  local_context: "repo path, command, or ticket id—one line"
+  why_it_mattered: "one sentence: user impact, risk, or wasted effort"
+  proposed_action: "CLARIFICATION | CONSTRAINT_TIGHTENING | CONSTRAINT_LOOSENING | NONE"
+```
+
+**Legacy:** Older entries may omit new fields; when counting toward thresholds, **backfill or normalize** before comparing—do not count raw duplicate **category** lines from pre-migration entries without a shared **implicated_rule_or_file** or **symptom + execution_phase** pair.
+
+## Normalization rules (inspectable—no scoring)
+
+1. **Symptom text alone is insufficient** to claim a repeated pattern. Two records with different root causes must not merge because the **observed_symptom** string looks similar.
+2. **Prefer grouping** by **implicated_rule_or_file**; if **decision_boundary** is set, prefer **implicated_rule_or_file** + **decision_boundary** together.
+3. **Wording variation must not split** a pattern when **implicated_rule_or_file** (and **decision_boundary** if any) matches—copy-paste edits are not required for grouping.
+4. **Threshold triggers** use **normalized** identity (fields above), not superficial phrasing overlap or category tag alone.
+5. **Unrelated symptoms** without a shared **implicated_rule_or_file** or shared **symptom + execution_phase** pair do not form one pattern—do not inflate counts across unrelated incidents.
+
+## Thresholds (enforcement triggers)
+
+Signals are evaluated in a **rolling 30-day** window unless stated otherwise.
+
+| Condition | Action |
+|-----------|--------|
+| **A.** Same **implicated_rule_or_file** appears in **≥ 3** distinct normalized signals | MUST open **002** proposal (clarify or tighten target file) |
+| **B.** Same **implicated_rule_or_file** + same **decision_boundary** (not `NONE`) in **≥ 3** signals | MUST open **002** proposal—**decision boundary** drift |
+| **C.** Same **observed_symptom** (exact match after trim) + same **execution_phase** in **≥ 3** signals | MUST open **002** proposal—phase-specific repeat |
+| **D.** **SAFETY_NEAR_MISS** ≥ **1** | MUST **030** escalation; block similar automation until reviewed |
+| **E.** **FALSE_VERIFIED** (claimed tests pass; did not) | MUST **CONSTRAINT_TIGHTENING** on **010** verification (immediate; does not require count **A–C**) |
+
+**Note:** **trigger_type** alone does **not** satisfy **A–C**; identity for **A–C** comes from the normalized fields. **A**, **B**, and **C** are separate paths—meeting **any one** triggers the proposal obligation.
+
+## Disallowed
+
+- Deleting or rewriting history in drift log without `SIG-…-SUPERSEDES` pointer.
+- Using drift log to **loosen** rules without **002** + evidence of false positives.
+- Opening **002** from **category** repetition only when **implicated_rule_or_file** and **A/B/C** identities are inconsistent or missing.
+
+## Failure conditions
+
+- Proposing MDC changes driven only by **un-normalized** symptom repetition or duplicate **trigger_type** tags without shared **implicated_rule_or_file** or **symptom + execution_phase** per **Normalization rules**.
+- Treating unrelated symptoms as one pattern when **implicated_rule_or_file** differs and **symptom + execution_phase** does not match **C**.
+- Failing to trigger a **002** proposal when **A**, **B**, or **C** is satisfied in-window with valid normalized records.
+- Classifying incidents as **OTHER** to avoid thresholds—**OTHER** still counts toward **A–C** if field identity matches.
+- Ignoring repeated signals that **do** meet **A–C** after normalization.
+
+## Cross-references
+
+- **002** — Proposals
+- **030** — Escalation

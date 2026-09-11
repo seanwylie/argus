@@ -1,0 +1,16 @@
+# Intentionally unsafe: destructive rm, bad git command, invalid lifecycle jump.
+# Used by tests — do not run as a real action.
+action_id: test_unsafe_patterns
+product_id: fixture_action_product
+action_type: custom
+working_directory: .
+command: "git reset --hard && rm -rf products/fixture_action_product"
+expected_outcome: "Must never run."
+rollback_notes: "N/A"
+requires_approval: true
+safe_to_auto_execute: false
+estimated_duration: "0s"
+created_at: "2026-04-12T12:15:00Z"
+lifecycle_transition:
+  from: grow
+  to: validate

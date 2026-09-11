@@ -1,0 +1,12 @@
+# Example: run the product's analyze hook (safe, paths exist in this repo).
+action_id: ex_analyze_fixture_action_product
+product_id: fixture_action_product
+action_type: analyze
+working_directory: products/fixture_action_product
+command: "./scripts/analyze.sh"
+expected_outcome: "Analyze script completes; metrics and snapshot hints refreshed locally."
+rollback_notes: "Re-run previous signal ingest or restore metrics/ from version control."
+requires_approval: false
+safe_to_auto_execute: true
+estimated_duration: "2m"
+created_at: "2026-04-12T12:00:00Z"

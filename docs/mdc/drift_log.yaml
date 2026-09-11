@@ -1,0 +1,12 @@
+# Optional drift signals for 004_argus_drift_detection.mdc
+# Append-only. Do not delete entries; use SIG-…-SUPERSEDES in new id if correcting.
+#
+# Example:
+# - id: SIG-20260415-001
+#   observed_at: "2026-04-15T12:00:00Z"
+#   category: TEST_GAP
+#   evidence: "tests/test_foo.py — agent claimed pass without running"
+#   mdc_files_implicated: ["010_execution_contract.mdc"]
+#   proposed_action: TIGHTEN
+
+[]

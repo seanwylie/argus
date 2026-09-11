@@ -1,0 +1,135 @@
+---
+description: What Argus artifacts are—truth vs interpretation; do not invent runs/ content
+alwaysApply: false
+---
+
+# 020 — Artifact contracts
+
+**Schema:** `argus.mdc.v1` · **Layer:** CORE
+
+## Truth artifacts (must match code + CLI behavior)
+
+- JSON under `runs/**` with explicit `schema` field where defined (e.g. `argus.operator_queue.v1`).
+- **Do not** fabricate contents of `runs/` in documentation as if git-tracked—prefer "if present locally".
+
+## Code artifacts
+
+- **Source of behavior:** `argus/**/*.py`, `tests/**/*.py`, `pyproject.toml`.
+- Changing schema strings without migration note = **failure** unless task is explicitly schema versioning.
+
+## Documentation artifacts
+
+- `docs/README.md` — CLI index; must not contradict `argus --help` for listed commands.
+- `docs/argus-context/*` — intent; does not override code truth.
+
+## Insight floor (required)
+
+**Run** = one **bounded task** in session (single stated scope: one issue, one PR-sized change, one review cycle).
+
+**Material artifact** = a human-facing deliverable for that task: final summary / findings section, designated markdown or note, PR body section, or prose accompanying primary `runs/` output—not raw telemetry alone with no linked interpretation.
+
+**Requirement:** Each **run** MUST include **≥1 qualifying insight** in **≥1 material artifact**. Other artifacts may be purely factual or mechanical. **Not required:** multiple insights, multiple artifacts with insights, or long prose.
+
+**Qualifying insight** — one claim that satisfies **at least one** of:
+
+1. **Reduces uncertainty** — narrows what was unknown or ambiguous about behavior, scope, or failure mode (with evidence).
+2. **Corrects a misunderstanding** — shows an prior assumption or stated belief was wrong vs repo or runtime.
+3. **Reveals a hidden dependency** — names a file, flag, env, ordering, or contract that must hold but was not obvious from the task text alone.
+4. **Exposes intent vs reality** — stated intent (doc, comment, ticket) vs observed code path or output—mismatch named.
+5. **Verification gap** — names a **NOT_RUN** / **UNKNOWN** dimension that **materially** lowers confidence for this change class (see **030**).
+
+Ungrounded assertions do **not** qualify.
+
+## Evidence linkage (insights only)
+
+A claimed insight **counts** toward the floor **only if** it references **≥1** of:
+
+- **Code location** — path + line or symbol (or unambiguous module/function reference tied to a path).
+- **Test / verification result** — test name, pass/fail, command and outcome, or explicit **NOT_RUN** with scope.
+- **Config or data artifact** — path to `yaml`, `toml`, JSON under `runs/`, or other checked-in config.
+- **Observed runtime behavior** — stderr, log line, CLI exit code, HTTP status—verbatim or paraphrased from the session.
+
+Insight with **no** such reference **does not** satisfy the floor.
+
+## Non-triviality (does not qualify)
+
+The following **do not** count as a qualifying insight:
+
+- Restating the task prompt or ticket title without refinement.
+- Summarizing **obvious** facts already visible in the opened files (e.g. file list, import list) with no new claim.
+- Repeating **known** documented system behavior without adding scope-specific refinement or contradiction.
+- Generic statements that **do not** narrow the problem, correct a belief, or tie to evidence above.
+
+## Signal coherence (operator-facing interpretation)
+
+When **multiple** signals are **simultaneously true** but **scoped to different questions**, operator-facing summaries must not let them **collapse** into one misleading story.
+
+### Coherence reconciliation (when applicable)
+
+IF a **material artifact** or **final summary** includes **multiple** signals such that a reasonable operator could infer the **wrong next action** or a **single root cause** unless scopes are separated (e.g. compact hint vs filesystem/input state vs temporal freshness vs heuristic/evaluation status), THEN the artifact MUST either:
+
+1. **Reconcile** how those signals relate—what each one answers—or  
+2. **State explicitly** that they answer **different questions** and must not be merged into one causal read.
+
+**Material divergence** = the combination could plausibly steer action incorrectly if read naively as one narrative—not every pair of fields in a large table.
+
+**Not required:** reconciling every possible field; only signals **actually presented** together in the same operator-facing summary or conclusion block.
+
+**Examples of distinct scopes (illustrative):** filesystem / input presence; heuristic or contract **match** status; temporal / freshness; high-level queue or dashboard **hint** tokens; mission vs golden gaps.
+
+### No root-cause inflation
+
+- MUST NOT strengthen a high-level hint or summary label into a **causal** story (e.g. “collector failed,” “heuristics are wrong”) unless **Evidence linkage** supports that causal claim.
+- MUST NOT treat labels such as **missing_golden**, **empty** inputs, **stale**, or **absent temporal** as interchangeable proof of **one** failure mode without evidence tying each claim.
+
+### Low-ceremony reconciliation
+
+Reconciliation MAY be minimal:
+
+- **One sentence:** e.g. “A answers heuristic match; B answers on-disk bundle; do not infer collection health from A alone.”
+- **One structured line** listing scope per signal.
+- **Short bullets:** “Hint → …; surface → …; temporal → …”
+
+**Forbidden:** Long prose used **instead of** a brief scope separation; verbosity that **simulates** reconciliation without stating how scopes differ.
+
+## Low-ceremony allowance
+
+**Allowed:**
+
+- Short, structured, or bullet-based artifacts.
+- Concise insight statements; **single-sentence** insights if they meet **Insight floor** + **Evidence linkage** + **Non-triviality**.
+
+**Forbidden:**
+
+- Verbosity or section count used to **simulate** depth.
+- Padding (repeated summaries, synonym loops) to **imply** rigor without one linked qualifying insight.
+
+## Allowed
+
+1. Adding **new** stamped artifacts under `runs/` only via **existing** CLI/pipeline code paths—not hand-written fake JSON for "demos" in PRs unless labeled fixture.
+
+2. Referencing artifact paths in MDC as **hypothetical** using: `if locally present: runs/...`.
+
+## Disallowed
+
+1. Committing large generated `runs/` snapshots without user request.
+2. Presenting a hand-crafted `runs/.../latest.json` as evidence of system behavior without reproducible command.
+3. Using **many** shallow sections or repeated summaries to **imply** rigor without a **single** qualifying insight where the floor applies.
+4. Operator-facing text that **hides** the distinction between signal scopes when **material divergence** applies per **Signal coherence**.
+
+## Failure conditions
+
+- Doc claims a file exists at path P when P is not in repo and not produced by documented command.
+- All **required** artifacts exist for the task but **no** material artifact contains a **qualifying insight** meeting **Insight floor**, **Evidence linkage**, and **Non-triviality**.
+- Claimed insight **lacks** evidence linkage.
+- Claimed insight is **trivial** — restates task, obvious listing, or generic statement per **Non-triviality**.
+- **Artifact volume** or redundant files used to **mask** absence of a qualifying insight.
+- **Materially divergent** true signals presented together in an operator summary **without** reconciliation or explicit multi-scope notice per **Signal coherence**.
+- Summary or headline implying a **stronger** root cause or failure mode than **Evidence linkage** supports (**No root-cause inflation**).
+- **Verbosity** or filler used to **avoid** a brief reconciliation line when coherence is required.
+
+## Cross-references
+
+- **000** — Truth vs interpretation
+- **030** — Verification gaps and confidence
+- Argus: `docs/model-contracts.md` if present

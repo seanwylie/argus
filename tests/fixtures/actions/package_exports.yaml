@@ -1,0 +1,12 @@
+# Example: archive metrics tree for handoff (no destructive flags).
+action_id: ex_package_metrics_demo_content
+product_id: demo-content
+action_type: custom
+working_directory: products/demo-content
+command: "tar czf ../../runs/portfolio/metrics-snapshot.tgz metrics/"
+expected_outcome: "A tarball is written under runs/portfolio/ for operator review."
+rollback_notes: "Delete the tarball from runs/portfolio/ if not needed."
+requires_approval: true
+safe_to_auto_execute: false
+estimated_duration: "1m"
+created_at: "2026-04-12T12:05:00Z"

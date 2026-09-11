@@ -1,0 +1,42 @@
+---
+description: Multi-pass work—checkpoints, diff discipline, when to split tasks
+alwaysApply: false
+---
+
+# 050 — Iteration protocol
+
+**Schema:** `argus.mdc.v1` · **Layer:** CORE
+
+## Pass model
+
+Each **pass** MUST end with one of:
+
+- **CHECKPOINT_OK:** tests/verification listed and outcome stated
+- **CHECKPOINT_BLOCKED:** explicit blocker + minimal next step
+- **DEFERRED:** verification impossible now; **UNKNOWN** items listed
+
+## Multi-pass rules
+
+1. **Pass 1:** Understand + reproduce (read tests, failing output). No behavior change unless trivial typo.
+2. **Pass 2:** Minimal fix + verify.
+3. **Pass 3+:** Only if Pass 2 fails or user expands scope—do not accumulate unrelated edits.
+
+## Allowed
+
+- User-directed "continue" inherits prior checkpoint unless user overrides scope.
+- Refiling a smaller PR-scope suggestion if Pass 2 reveals larger issue—**030** escalate.
+
+## Disallowed
+
+- Mixing unrelated refactors into a bugfix pass.
+- "While I'm here" edits outside **050** scope without user OK.
+
+## Failure conditions
+
+- No checkpoint string in long **IMPLEMENT** sessions.
+- Diff touching >5 files without justification in first message of pass.
+
+## Cross-references
+
+- **010** — Verification floor
+- **001** — Modes

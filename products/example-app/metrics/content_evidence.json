@@ -1,0 +1,12 @@
+{
+  "schema": "argus.content_evidence.v1",
+  "group_count": 3,
+  "slot_count": 8,
+  "seeded_slot_count": 2,
+  "outlined_slot_count": 1,
+  "published_slot_count": 0,
+  "planned_slots_remaining": 5,
+  "node_count": 3,
+  "slots_present": 3,
+  "catalog_depth_summary": "8 slots across 3 groups; 3 entries on disk (2 seeded, 1 outlined). Fictional fixture, not traffic or revenue data."
+}

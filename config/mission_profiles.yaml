@@ -1,0 +1,50 @@
+# Mission profiles — mission-conditioned operator intent (does not alter signals/audit/findings).
+# Schema: argus.mission_registry.v1 — see docs/mission-model.md
+#
+# Effective mission = default_mission_id, overridden by runs/mission/current.json or ARGUS_MISSION_ID.
+
+schema: argus.mission_registry.v1
+default_mission_id: revenue
+
+profiles:
+  revenue:
+    id: revenue
+    primary_objective: Maximize sustainable revenue and healthy unit economics without sacrificing trust.
+    drivers:
+      - conversion and retention
+      - margin and cost discipline
+      - pricing and packaging clarity
+    risk_posture: moderate
+    policy_influence_hints:
+      emphasis: Prefer portfolio and decision moves with measurable revenue or margin impact where evidence exists.
+    weights:
+      revenue_alignment: 1.0
+      cost_sensitivity: 0.8
+
+  education:
+    id: education
+    primary_objective: Maximize learning outcomes, clarity, and equitable access for learners.
+    drivers:
+      - pedagogical quality
+      - curriculum coherence
+      - accessibility and comprehension
+    risk_posture: conservative
+    policy_influence_hints:
+      emphasis: Favor stability, clarity, and safety over aggressive shipping when evidence is thin.
+    weights:
+      learning_quality: 1.0
+      safety_and_clarity: 0.95
+
+  engagement:
+    id: engagement
+    primary_objective: Build durable, ethical engagement and retention without dark patterns.
+    drivers:
+      - product delight
+      - habit formation (transparent)
+      - trust and brand
+    risk_posture: moderate
+    policy_influence_hints:
+      emphasis: Balance growth tactics with transparency; avoid coercion in orchestration and messaging.
+    weights:
+      retention_alignment: 1.0
+      trust_preservation: 0.9

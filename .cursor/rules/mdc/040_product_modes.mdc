@@ -1,0 +1,41 @@
+---
+description: Extension—how portfolio products vs Argus core differ for implementation agents
+alwaysApply: false
+---
+
+# 040 — Product modes (extension)
+
+**Schema:** `argus.mdc.v1` · **Layer:** EXTENSION
+
+## Scope distinction
+
+| Area | Rules |
+|------|--------|
+| **`argus/`**, **`tests/`**, root `pyproject.toml`** | Full **000–050** |
+| **`products/<id>/`** | Product `product.yaml` + user doctrine; do not impose Argus CLI on app runtime without request |
+
+## Rule hierarchy in nested products
+
+Argus MDC (`.cursor/rules/mdc/`) remains the **session-wide** stack (**003**). A product may add **`.cursor/rules/*.mdc` under `products/<id>/`** for subtree-local conventions (imports, venv, git). When both apply to the same edit:
+
+- **000–001** are never overridden by product rules.
+- Product rules **override** generic **010** verification *defaults* for that path when documented (**003** conflict clause; **060** onboarding).
+
+## Allowed
+
+- Editing `products/<id>/` when task explicitly names product id.
+- Running product-local tests only if documented in that product.
+
+## Disallowed
+
+- Applying Argus portfolio **policy** semantics inside product UI code without user request.
+- Deleting product `app/` trees without explicit instruction.
+
+## Failure conditions
+
+- Changing wrong `products/<id>/` vs user intent.
+
+## Cross-references
+
+- **060** — Onboarding
+- `docs/product-model.md`

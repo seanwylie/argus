@@ -1,0 +1,49 @@
+name: Bug report
+description: Something behaves differently than documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project is maintained as time permits, so a response may take a while.
+
+        The most useful reports are ones where the suite or a documented command
+        disagrees with the documentation. Those are treated as correctness issues.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, and what it did.
+      placeholder: |
+        $ uv run argus portfolio refresh
+        ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+      description: If the documentation says otherwise, please link or quote it.
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.11.9"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "Ubuntu 24.04 / macOS 15.1 / Windows 11 + WSL2"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: "`uv run pytest -q` passes on my machine (or I have included the failure)"
+        - label: I am not reporting a capability listed as absent or out of scope in the README

@@ -1,0 +1,35 @@
+name: Documentation overstates or misdescribes capability
+description: A document claims something the code does not do, or describes it inaccurately.
+labels: [documentation, accuracy]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These reports are genuinely valuable. The project's central claim is that its
+        state is legible, so documentation that overstates capability is a defect in the
+        thing being claimed — not a cosmetic problem.
+
+        One exception: `docs/argus-context/north-star.md` is a design target and says so
+        in a banner at the top. Aspirational statements there are intentional. If the
+        banner is missing or unclear, that is worth reporting.
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: File and line, or a heading.
+      placeholder: "docs/architecture.md, 'Execution' section"
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: What it claims
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What the code actually does
+      description: A pointer to the relevant module or test is ideal.
+    validations:
+      required: true
